@@ -14,8 +14,6 @@ function divide (a, b) {
     return a / b;
 }
 
-let firstNum, op, secondNum;
-
 function operate (op, num1, num2) {
     let result
     switch (op) {
@@ -43,11 +41,12 @@ function populateDisplay (num) {
     display.textContent += num;
 }
 
-function errase () {
-    let array = display.textContent.split("");
-    array.pop();
-    display.textContent = array.join("");
+function setOperator (btn) {
+    op = btn;
+    if (display.textContent != "") firstNum = parseFloat(display.textContent);
+    display.textContent = "";
 }
+
 function clearAll () {
     display.textContent = "";
     firstNum = null;
@@ -55,11 +54,7 @@ function clearAll () {
     secondNum = null;
     result = null
 }
-function setOperator (btn) {
-    op = btn;
-    if (display.textContent != "") firstNum = parseFloat(display.textContent);
-    display.textContent = "";
-}
+
 function getResult () {
     secondNum = parseFloat(display.textContent);
     if (op != null && firstNum != null && secondNum != null){
@@ -80,6 +75,28 @@ function getResult () {
     }
 }
 
+function errase () {
+    let array = display.textContent.split("");
+    array.pop();
+    display.textContent = array.join("");
+}
+
+function selectKey (e) {
+    if (e.key >= 0 && e.key <= 9) populateDisplay(e.key);
+    if (e.key === "Backspace") errase();
+    if (e.key === "Escape" || e.key === "Delete") clearAll();
+    if (e.key === "+" ||e.key === "-" || e.key === "*" || e.key === "/") setOperator(e.key);
+    if (e.key === "Enter" || e.key === "=") getResult();
+    if (e.key === ".") addDot();
+}
+
+function addDot () {
+    if (display.textContent === "") display.textContent += 0;
+    if (display.textContent.includes(".")) return;
+    display.textContent += "." ;
+}
+
+let firstNum, op, secondNum;
 let result = 0;
 const display = document.querySelector("#display");
 const btns = document.querySelectorAll(".number");
@@ -87,6 +104,7 @@ const operator = document.querySelectorAll(".operator");
 const equal = document.querySelector("#equal");
 const clear = document.querySelector("#clear");
 const backspace = document.querySelector("#backspace");
+const dot = document.querySelector("#dot");
 
 btns.forEach(btn => btn.addEventListener("click", () => populateDisplay(btn.textContent)));
 
@@ -98,10 +116,6 @@ equal.addEventListener("click", getResult);
 
 backspace.addEventListener("click", errase);
 
-window.addEventListener("keydown", (e) => {
-    if (e.key >= 0 && e.key <= 9) populateDisplay(e.key);
-    if (e.key === "Backspace") errase();
-    if (e.key === "Escape" || e.key === "Delete") clearAll();
-    if (e.key === "+" ||e.key === "-" || e.key === "*" || e.key === "/") setOperator(e.key);
-    if (e.key === "Enter" || e.key === "=") getResult();
-});
+window.addEventListener("keydown", (e) => selectKey(e));
+
+dot.addEventListener("click", addDot)

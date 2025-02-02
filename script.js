@@ -38,6 +38,9 @@ function operate (op, num1, num2) {
 
 function populateDisplay (num) {
     if (display.textContent === "ERROR" || display.textContent === "Go Back to School") display.textContent = "";
+    if(display.textContent.length > 9) {
+        display.innerText = displayValue.substring(0, 9);
+    }
     display.textContent += num;
 }
 
@@ -96,8 +99,10 @@ function addDot () {
     display.textContent += "." ;
 }
 
-let firstNum, op, secondNum;
-let result = 0;
+let firstNum = null,
+    op = null,
+    secondNum = null,
+    result = null;
 const display = document.querySelector("#display");
 const btns = document.querySelectorAll(".number");
 const operator = document.querySelectorAll(".operator");
